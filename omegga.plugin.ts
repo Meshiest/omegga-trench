@@ -58,11 +58,11 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
           extent: [size * 5, size * 5, size * 5] as Vector,
         };
 
-        const player = Omegga.getPlayer(id);
+        // const player = Omegga.getPlayer(id);
 
         try {
-          const [crouched, playerPos, data] = await Promise.all([
-            player.isCrouched(pawn),
+          const [/* crouched,  */ playerPos, data] = await Promise.all([
+            // player.isCrouched(pawn),
             this.getPositionWithPawn(pawn),
             Omegga.getSaveData(region),
           ]);
@@ -77,23 +77,23 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
           ]);
 
           // when not crouched, remove a brick
-          if (!crouched) {
-            const subcubes =
-              half <= 1 ? [] : getSubCubes(half, position, closestEdge);
+          // if (!crouched) {
+          const subcubes =
+            half <= 1 ? [] : getSubCubes(half, position, closestEdge);
 
-            Omegga.clearRegion(region);
-            if (data && subcubes.length > 0) {
-              Omegga.loadSaveData(
-                {
-                  ...data,
-                  bricks: [
-                    ...subcubes.map(cube => ({ ...data.bricks[0], ...cube })),
-                  ],
-                },
-                { quiet: true }
-              );
-            }
-          } else {
+          Omegga.clearRegion(region);
+          if (data && subcubes.length > 0) {
+            Omegga.loadSaveData(
+              {
+                ...data,
+                bricks: [
+                  ...subcubes.map(cube => ({ ...data.bricks[0], ...cube })),
+                ],
+              },
+              { quiet: true }
+            );
+          }
+          /* } else {
             const maxDelta = Math.max(...delta.map(Math.abs));
             const normalAxis = delta.findIndex(v => Math.abs(v) === maxDelta);
             const direction = Math.sign(delta[normalAxis]);
@@ -105,10 +105,9 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
               [normalAxis]: direction,
               length: 3,
             }) as Vector;
-            /* same as below but I chose darkness
-              normal = [0, 0, 0]
-              normal[normalAxis] = direction
-             */
+            // same as below but I chose darkness
+            // normal = [0, 0, 0]
+            // normal[normalAxis] = direction
 
             Omegga.loadSaveData(
               {
@@ -125,7 +124,7 @@ export default class Plugin implements OmeggaPlugin<Config, Storage> {
               },
               { quiet: true }
             );
-          }
+          } */
         } catch (err) {
           console.error(err);
         }
